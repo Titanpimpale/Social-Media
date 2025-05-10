@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Connections | SocialConnect{% endblock %}
+
+{% block content %}
+<div class="connections-container">
+  <h1 class="page-title">Your Connections</h1>
+  
+  <!-- Pending Requests Section -->
+  <div class="connection-section">
+    <h2 class="section-title">Pending Requests</h2>
+    {% if pending_requests %}
+      <div class="connection-grid">
+        {% for connection in pending_requests %}
+          <div class="connection-card">
+            <div class="connection-avatar">
+              {% if connection.follower.userprofile.profile_picture %}
+                <img src="{{ connection.follower.userprofile.profile_picture.url }}" alt="{{ connection.follower.username }}">
+              {% else %}
+                <img src="{% static 'images/default-profile.png' %}" alt="{{ connection.follower.username }}">
+              {% endif %}
+            </div>
+            <div class="connection-info">
+              <div class="connection-name">{{ connection.follower.get_full_name|default:connection.follower.username }}</div>
+              <div class="connection-actions">
+                <form action="{% url 'respond_to_request_view' connection.id %}" method="post" style="display: inline;">
+                  {% csrf_token %}
+                  <input type="hidden" name="status" value="accepted">
+                  <button type="submit" class="btn-accept">Accept</button>
+                </form>
+                <form action="{% url 'respond_to_request_view' connection.id %}" method="post" style="display: inline;">
+                  {% csrf_token %}
+                  <input type="hidden" name="status" value="declined">
+                  <button type="submit" class="btn-decline">Decline</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="empty-message">No pending connection requests.</p>
+    {% endif %}
+  </div>
+  
+  <!-- Following Section -->
+  <div class="connection-section">
+    <h2 class="section-title">People You Follow</h2>
+    {% if following %}
+      <div class="connection-grid">
+        {% for connection in following %}
+          <div class="connection-card">
+            <div class="connection-avatar">
+              {% if connection.following.userprofile.profile_picture %}
+                <img src="{{ connection.following.userprofile.profile_picture.url }}" alt="{{ connection.following.username }}">
+              {% else %}
+                <img src="{% static 'images/default-profile.png' %}" alt="{{ connection.following.username }}">
+              {% endif %}
+            </div>
+            <div class="connection-info">
+              <div class="connection-name">{{ connection.following.get_full_name|default:connection.following.username }}</div>
+              <a href="{% url 'profile_view' connection.following.username %}" class="btn-view-profile">View Profile</a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="empty-message">You are not following anyone yet.</p>
+    {% endif %}
+  </div>
+  
+  <!-- Followers Section -->
+  <div class="connection-section">
+    <h2 class="section-title">People Following You</h2>
+    {% if followers %}
+      <div class="connection-grid">
+        {% for connection in followers %}
+          <div class="connection-card">
+            <div class="connection-avatar">
+              {% if connection.follower.userprofile.profile_picture %}
+                <img src="{{ connection.follower.userprofile.profile_picture.url }}" alt="{{ connection.follower.username }}">
+              {% else %}
+                <img src="{% static 'images/default-profile.png' %}" alt="{{ connection.follower.username }}">
+              {% endif %}
+            </div>
+            <div class="connection-info">
+              <div class="connection-name">{{ connection.follower.get_full_name|default:connection.follower.username }}</div>
+              <a href="{% url 'profile_view' connection.follower.username %}" class="btn-view-profile">View Profile</a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="empty-message">You don't have any followers yet.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+

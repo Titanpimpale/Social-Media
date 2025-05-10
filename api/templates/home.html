@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+
+
+{% load static %}
+
+{% block title %}SocialConnect - Home{% endblock %}
+
+{% block extra_css %}
+<style>
+  .hero-section {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 4rem 0;
+    text-align: center;
+    margin-bottom: 3rem;
+    border-radius: 0 0 10px 10px;
+  }
+  
+  .hero-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  
+  .features-container {
+    max-width: 1000px;
+    margin: 0 auto 3rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+  
+  .feature-card {
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    padding: 2rem;
+    text-align: center;
+    transition: transform 0.3s;
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .feature-icon {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+  }
+  
+  .feature-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+  }
+  
+  .feature-description {
+    color: var(--light-text);
+    margin-bottom: 1.5rem;
+  }
+  
+  .cta-section {
+    background-color: var(--secondary-color);
+    padding: 3rem;
+    text-align: center;
+    border-radius: 8px;
+    margin-bottom: 3rem;
+  }
+  
+  .cta-title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+  }
+  
+  .cta-description {
+    max-width: 600px;
+    margin: 0 auto 2rem;
+    color: var(--light-text);
+  }
+  
+  .btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 4px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s;
+    border: none;
+  }
+  
+  .btn-primary:hover {
+    background-color: var(--accent-color);
+    color: white;
+    text-decoration: none;
+  }
+  
+  .btn-secondary {
+    background-color: white;
+    color: var(--primary-color);
+    padding: 0.75rem 2rem;
+    border-radius: 4px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s;
+    margin-left: 1rem;
+    border: 1px solid var(--primary-color);
+  }
+  
+  .btn-secondary:hover {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    text-decoration: none;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+  <div class="container">
+    <h1 class="hero-title">Welcome to SocialConnect</h1>
+    <p class="hero-subtitle">Connect with friends, share moments, and discover new connections in our social community.</p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="features-container">
+    <div class="feature-card">
+      <div class="feature-icon">
+        <i class="fas fa-users"></i>
+      </div>
+      <h3 class="feature-title">Connect with Friends</h3>
+      <p class="feature-description">Find and connect with friends, family, and interesting people around you.</p>
+      <a href="{% url 'register' %}" class="btn-primary">Get Started</a>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">
+        <i class="fas fa-share-alt"></i>
+      </div>
+      <h3 class="feature-title">Share Your Moments</h3>
+      <p class="feature-description">Post updates, photos, and stories to share with your connections.</p>
+      {% if user.is_authenticated %}
+      <a href="/feed/" class="btn-primary">Go to Feed</a>
+      {% else %}
+      <a href="{% url 'login' %}" class="btn-primary">Login</a>
+      {% endif %}
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">
+        <i class="fas fa-compass"></i>
+      </div>
+      <h3 class="feature-title">Discover Content</h3>
+      <p class="feature-description">Find interesting content and recommendations based on your interests.</p>
+      {% if user.is_authenticated %}
+      <a href="/profile/" class="btn-primary">View Profile</a>
+      {% else %}
+      <a href="{% url 'register' %}" class="btn-primary">Join Now</a>
+      {% endif %}
+    </div>
+  </div>
+  
+  <div class="cta-section">
+    <h2 class="cta-title">Ready to Connect?</h2>
+    <p class="cta-description">Join thousands of users already sharing and connecting on SocialConnect.</p>
+    {% if user.is_authenticated %}
+    <a href="/feed/" class="btn-primary">Go to Feed</a>
+    <a href="/profile/" class="btn-secondary">View Profile</a>
+    {% else %}
+    <a href="{% url 'register' %}" class="btn-primary">Sign Up</a>
+    <a href="{% url 'login' %}" class="btn-secondary">Login</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
