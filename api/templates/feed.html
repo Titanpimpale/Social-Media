@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Feed | SocialConnect{% endblock %}
+
+{% block content %}
+<div class="feed-container">
+  <!-- Create Post Form -->
+  <div class="create-post">
+    <div class="create-post-header">Create a Post</div>
+    <form class="create-post-form" action="{% url 'post_create' %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <textarea name="content" class="create-post-textarea" placeholder="What's on your mind?"></textarea>
+      <div class="create-post-actions">
+        <label class="create-post-file">
+          <i class="fas fa-image"></i> Add Image
+          <input type="file" name="image" style="display: none;">
+        </label>
+        <button type="submit" class="create-post-submit">Post</button>
+      </div>
+    </form>
+  </div>
+  
+  <!-- Posts Feed -->
+  {% if posts %}
+    {% for post in posts %}
+      <div class="post-card">
+        <div class="post-header">
+          {% if post.user.userprofile.profile_picture %}
+            <img src="{{ post.user.userprofile.profile_picture.url }}" alt="{{ post.user.username }}" class="post-avatar">
+          {% else %}
+            <img src="{% static 'images/default-profile.png' %}" alt="{{ post.user.username }}" class="post-avatar">
+          {% endif %}
+          <div>
+            <div class="post-user">{{ post.user.get_full_name|default:post.user.username }}</div>
+            <div class="post-meta">{{ post.created_at|timesince }} ago</div>
+          </div>
+        </div>
+        
+        <div class="post-content">
+          <p class="post-text">{{ post.content }}</p>
+          {% if post.image %}
+            <div class="post-image-container">
+              <img src="{{ post.image.url }}" alt="Post image" class="post-image">
+            </div>
+          {% endif %}
+        </div>
+        
+        <div class="post-actions">
+          {% if post.liked_by_user %}
+            <form action="{% url 'unlike_post' post.id %}" method="post" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="post-action liked" style="background: none; border: none;">
+                <i class="fas fa-heart"></i> {{ post.like_count }} Likes
+              </button>
+            </form>
+          {% else %}
+            <form action="{% url 'like_post' post.id %}" method="post" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="post-action" style="background: none; border: none;">
+                <i class="far fa-heart"></i> {{ post.like_count }} Likes
+              </button>
+            </form>
+          {% endif %}
+          
+          {% if post.disliked_by_user %}
+            <form action="{% url 'undislike_post' post.id %}" method="post" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="post-action disliked" style="background: none; border: none;">
+                <i class="fas fa-thumbs-down"></i> {{ post.dislike_count }} Dislikes
+              </button>
+            </form>
+          {% else %}
+            <form action="{% url 'dislike_post' post.id %}" method="post" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="post-action" style="background: none; border: none;">
+                <i class="far fa-thumbs-down"></i> {{ post.dislike_count }} Dislikes
+              </button>
+            </form>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty-feed">
+      <div class="empty-feed-icon">
+        <i class="fas fa-newspaper"></i>
+      </div>
+      <h2 class="empty-feed-title">Your Feed is Empty</h2>
+      <p class="empty-feed-message">Follow other users to see their posts in your feed.</p>
+      <a href="{% url 'profile_view' %}" class="empty-feed-action">Find People to Follow</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+

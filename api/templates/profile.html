@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}{{ profile.user.username }} | SocialConnect{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header card">
+        {% if profile.profile_picture %}
+            <img src="{{ profile.profile_picture.url }}" alt="{{ profile.user.username }}" class="profile-pic">
+        {% else %}
+            <img src="{% static 'images/default-profile.png' %}" alt="{{ profile.user.username }}" class="profile-pic">
+        {% endif %}
+        <div class="profile-info">
+            <h1>{{ profile.user.username }}</h1>
+            <p class="bio">{{ profile.bio|default:"No bio yet." }}</p>
+            
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <div class="stat-value">{{ post_count }}</div>
+                    <div class="stat-label">Posts</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ follower_count }}</div>
+                    <div class="stat-label">Followers</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ following_count }}</div>
+                    <div class="stat-label">Following</div>
+                </div>
+            </div>
+            
+            <div class="profile-actions">
+                {% if user == profile.user %}
+                    <a href="{% url 'edit_profile' %}" class="btn-primary">Edit Profile</a>
+                {% elif is_following %}
+                    <form action="{% url 'unfollow_user' profile.user.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-secondary">Unfollow</button>
+                    </form>
+                {% else %}
+                    <form action="{% url 'follow_user' profile.user.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-primary">Follow</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="posts-container">
+        <h2>Posts</h2>
+        {% for post in posts %}
+        <div class="card post">
+            <div class="card-header">
+                {% if profile.profile_picture %}
+                    <img src="{{ profile.profile_picture.url }}" alt="{{ profile.user.username }}">
+                {% else %}
+                    <img src="{% static 'images/default-profile.png' %}" alt="{{ profile.user.username }}">
+                {% endif %}
+                <div class="user-info">
+                    <div class="username">{{ profile.user.username }}</div>
+                    <div class="timestamp">{{ post.created_at|timesince }} ago</div>
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="post-content">{{ post.content }}</p>
+                {% if post.image %}
+                <div class="post-image-container">
+                    <img src="{{ post.image.url }}" alt="Post image" class="post-image">
+                </div>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <button class="action-btn like-btn" data-post-id="{{ post.id }}">
+                    {% if user in post.likes.all %}
+                    <i class="fas fa-heart"></i>
+                    {% else %}
+                    <i class="far fa-heart"></i>
+                    {% endif %}
+                    <span class="like-count">{{ post.likes.count }}</span> Likes
+                </button>
+                <button class="action-btn comment-btn">
+                    <i class="far fa-comment"></i> Comment
+                </button>
+                <button class="action-btn share-btn">
+                    <i class="far fa-share-square"></i> Share
+                </button>
+            </div>
+        </div>
+        {% empty %}
+        <div class="card">
+            <div class="card-body">
+                <p>No posts yet.</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
