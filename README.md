@@ -62,6 +62,14 @@ SocialConnect is a full-featured social media web application built with Django 
 
 7. Access the application at http://127.0.0.1:8000/
 
+## Screenshot
+
+![Image](https://github.com/user-attachments/assets/6f8d5777-e08b-42df-a86f-08a18b95248d)
+![Image](https://github.com/user-attachments/assets/49c414a4-4d0e-4c70-82cd-4bc1c9562774)
+![Image](https://github.com/user-attachments/assets/1e1b7f16-8718-4157-8c68-9a98b3631b84)
+![Image](https://github.com/user-attachments/assets/43a0fd74-b2ac-45d4-89a8-065bec55a197)
+![Image](https://github.com/user-attachments/assets/4b2e018b-0eb2-4f2e-8f03-b8b272f576cc)
+
 ## API Endpoints
 
 SocialConnect provides a comprehensive RESTful API. All API endpoints are available at `/api/`.
